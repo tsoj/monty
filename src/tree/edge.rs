@@ -5,6 +5,7 @@ pub struct Edge {
     policy: i16,
     visits: i32,
     wins: f32,
+    minimax_value: Option<f32>,
 }
 
 impl Default for Edge {
@@ -15,6 +16,7 @@ impl Default for Edge {
             policy: 0,
             visits: 0,
             wins: 0.0,
+            minimax_value: None,
         }
     }
 }
@@ -27,6 +29,7 @@ impl Edge {
             policy,
             visits: 0,
             wins: 0.0,
+            minimax_value: None,
         }
     }
 
@@ -54,6 +57,10 @@ impl Edge {
         self.wins / self.visits as f32
     }
 
+    pub fn minimax_value(&self) -> f32 {
+        self.minimax_value.unwrap_or(self.q())
+    }
+
     pub fn set_ptr(&mut self, ptr: i32) {
         self.ptr = ptr;
     }
@@ -67,8 +74,19 @@ impl Edge {
         self.wins = wins;
     }
 
-    pub fn update(&mut self, result: f32) {
+    pub fn update(&mut self, result: f32, actions: Vec<Edge>) {
         self.visits += 1;
         self.wins += result;
+
+        if !actions.is_empty() {
+            let mut best_value = -1.0;
+            for edge in actions {
+                if edge.minimax_value() >= best_value {
+                    best_value = edge.minimax_value();
+                }
+            }
+
+            self.minimax_value = Some(1.0 - best_value);
+        }
     }
 }

@@ -180,7 +180,8 @@ impl<T: GameRep> Searcher<T> {
         u = 1.0 - u;
 
         // update stats for this node
-        self.tree.edge_mut(parent, action).update(u);
+        let actions_vec = self.tree[ptr].actions().to_vec();
+        self.tree.edge_mut(parent, action).update(u, actions_vec);
 
         // push node stats to hash table
         let edge = self.tree.edge(parent, action);

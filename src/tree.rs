@@ -317,10 +317,10 @@ impl Tree {
                     GameState::Lost(n) => 1.0 + f32::from(n),
                     GameState::Won(n) => f32::from(n) - 256.0,
                     GameState::Draw => 0.5,
-                    GameState::Ongoing => child.q(),
+                    GameState::Ongoing => child.minimax_value(),
                 }
             } else {
-                child.q()
+                child.minimax_value()
             }
         })
     }
